@@ -184,6 +184,7 @@ Wider priors on halo and cannibalization weights
 Latent state correlation between paid and organic in the 20–30% range
 
 ## Spend Decision Framework
+
 A key contribution of this work is the development of a spend decision-making framework that accounts for posterior uncertainty in a realistic, probabilistically grounded manner. Traditional approaches to spend optimization rely on expected value curves derived from deterministic models or single-point estimates, which fail to reflect the asymmetric risks and heterogeneous uncertainty inherent in marketing environments. In contrast, our framework introduces a binary decision framing: whether a given spend level is profitable or not, based on a probabilistic threshold.
 
 1. Binary Framing of Profitability
@@ -213,14 +214,17 @@ be the average return across posterior draws where . This conditional expectatio
 
 For each channel, we produce a two-dimensional diagnostic curve over feasible spend levels:
 
+
 Together, these allow stakeholders to balance likelihood of success with magnitude of return. Unlike static confidence intervals, this method reflects the true structure of the posterior and its implications for actionable decisions.
 
 4. Scope and Domain of Application
 
-We restrict evaluation to spend levels supported by the observed distribution in the training data, or those within a conservative extrapolation margin. For each channel, we define a channel-specific spend support 
+We restrict evaluation to spend levels supported by the observed distribution in the training data, or those within a conservative extrapolation margin. For each channel, we define a channel-specific spend support , where:
 
+s_{\min} = \min(\text{Observed Spend}) + \epsilon, \quad s_{\max} = \max(\text{Observed Spend})
 
 This prevents unrealistic inferences far beyond the empirical support and ensures that optimization operates within a calibrated, interpretable region.
+
 
 
 These findings validate the model’s robustness in realistic settings, while also highlighting limitations in regimes of low identifiability.
