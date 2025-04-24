@@ -99,6 +99,12 @@ MMX includes binary and continuous event covariates (e.g., holidays, playoffs, p
 
 ## Model Specification
 
+We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes. See model_specification_math.pdf for formal model specification.
+
+
+
+## Model Specification
+
 See Model_Specification_Math.pdf for formal specification.
 
 
