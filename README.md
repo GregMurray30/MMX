@@ -183,6 +183,45 @@ Wider priors on halo and cannibalization weights
 
 Latent state correlation between paid and organic in the 20–30% range
 
+## Spend Decision Framework
+A key contribution of this work is the development of a spend decision-making framework that accounts for posterior uncertainty in a realistic, probabilistically grounded manner. Traditional approaches to spend optimization rely on expected value curves derived from deterministic models or single-point estimates, which fail to reflect the asymmetric risks and heterogeneous uncertainty inherent in marketing environments. In contrast, our framework introduces a binary decision framing: whether a given spend level is profitable or not, based on a probabilistic threshold.
+
+1. Binary Framing of Profitability
+
+For each channel, we simulate the posterior predictive distribution of revenue as a function of spend using posterior draws of the Beta–Hill parameters from the Stage 2 causal model. We define profitability at a given spend level as:
+
+\text{Profitability}(s) = \mathbb{P}\left( \frac{R(s)}{s} \geq \tau \right)
+
+where:
+
+ is the predicted revenue at spend level ,
+
+ is the threshold return-on-spend (e.g., 1.0 for breakeven).
+
+
+Each posterior draw constitutes a single trial, and profitability is evaluated as the fraction of draws exceeding the threshold. This approach naturally captures epistemic uncertainty and avoids overconfidence in under-supported spend regions.
+
+2. Conditional Expected Return
+
+In addition to profitability, we compute the expected return conditional on success, which serves as a risk-adjusted opportunity signal. Let:
+
+\mathbb{E}[R(s) \mid \text{Profitable}]
+
+be the average return across posterior draws where . This conditional expectation informs which spend levels not only have a high chance of profitability, but also meaningful upside.
+
+3. Decision Support Output
+
+For each channel, we produce a two-dimensional diagnostic curve over feasible spend levels:
+
+Together, these allow stakeholders to balance likelihood of success with magnitude of return. Unlike static confidence intervals, this method reflects the true structure of the posterior and its implications for actionable decisions.
+
+4. Scope and Domain of Application
+
+We restrict evaluation to spend levels supported by the observed distribution in the training data, or those within a conservative extrapolation margin. For each channel, we define a channel-specific spend support 
+
+
+This prevents unrealistic inferences far beyond the empirical support and ensures that optimization operates within a calibrated, interpretable region.
+
 
 These findings validate the model’s robustness in realistic settings, while also highlighting limitations in regimes of low identifiability.
 
