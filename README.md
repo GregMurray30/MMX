@@ -102,6 +102,51 @@ MMX includes binary and continuous event covariates (e.g., holidays, playoffs, p
 We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes. See model_specification_math.pdf for formal model specification which is currently a work in progress.
 
 
+## Simulation Strategy
+
+To evaluate the performance of the MMX model under controlled and diagnostically informative conditions, we developed a flexible simulation framework that generates realistic, weekly-level marketing and revenue data across multiple digital channels. This framework allows us to validate whether the MMX model improves attribution over baseline methods (e.g., SKAN-derived response curves), particularly in the presence of known halo effects, cannibalization biases, and latent confounding through shared monetization states.
+
+### Data Generation Process
+
+We simulate media spend across four channels over a 52-week horizon, with temporal patterns informed by real-world campaign behaviors, including variable flighting, blackout periods, and bursts of isolated spend. Spend is transformed through Hill and Adstock functions to mimic diminishing returns and memory effects. These transformed signals interact multiplicatively with latent states and seasonality to produce aggregate revenue. Importantly, a local linear trend and an ARMA(3,1)-based latent monetization state drive both paid and organic components, with separate deviation terms (delta parameters) per channel type.
+
+Seasonal events such as holidays and product launches are injected through additive effects, and Google Trends serves as a correlated covariate for the organic latent state.
+
+### SKAN Bias Simulation
+
+We simulate SKAN postbacks using the true channel-level revenue, modified by three sources of structured noise:
+
+1. Censoring Bias: High spend results in more complete reporting; lower spend leads to information loss, modeled via exponential decay.
+
+
+2. Cannibalization: Simulates misattribution from organic and other channels due to last-touch attribution. It is modeled as a function of the log of other channels’ spend and organic traffic volume.
+
+
+3. Halo Effect: Represents under-attribution of paid media that indirectly boosts organic installs. This is simulated as a negative adjustment to SKAN postbacks, driven by log spend of the same channel.
+
+
+
+Gaussian noise is added to SKAN observations, completing the distortion relative to true channel revenue.
+
+### Evaluation Design
+
+For each simulation:
+
+We train MMX and a benchmark SKAN-derived response curve model on the same synthetic data.
+
+The benchmark model uses a Bayesian framework with fixed event controls and a linear trend index, but no latent states or SKAN de-biasing.
+
+For each channel, we compute Mean Absolute Percentage Error (MAPE) against the known true response curve.
+
+Performance is compared across MMX and SKAN using directional accuracy, percentage of simulations where MMX outperforms, and diagnostic correlation analyses.
+
+
+### Scope of Simulations
+
+We conduct 100 simulations across a spectrum of latent state correlations (15%–40%), halo and cannibalization intensities, and SKAN noise levels. Simulations are stratified by conditions such as channel isolation, collinearity of spend, and total scale, enabling generalization of findings.
+
+
+
 
 
 
