@@ -103,9 +103,5 @@ We define a Bayesian generative model that jointly explains observed aggregate r
 
 
 
-## Model Specification
-
-See Model_Specification_Math.pdf for formal specification.
-
 
 
