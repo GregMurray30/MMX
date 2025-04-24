@@ -146,6 +146,46 @@ Performance is compared across MMX and SKAN using directional accuracy, percenta
 We conduct 100 simulations across a spectrum of latent state correlations (15%–40%), halo and cannibalization intensities, and SKAN noise levels. Simulations are stratified by conditions such as channel isolation, collinearity of spend, and total scale, enabling generalization of findings.
 
 
+## Results
+
+Across 100 simulation runs, the MMX model consistently demonstrated an improvement over SKAN-derived response curves in the presence of structured attribution bias. The results are evaluated on three channels with varying characteristics, anonymized as Channel A, Channel B, and Channel C.
+
+### Overall Performance
+
+Channel A (High spend, low correlation with other channels):
+MMX outperformed SKAN in 93% of simulations. Performance was robust across both high and low halo/cannibalization regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
+
+Channel B (Low total spend, high co-spend with other channels):
+MMX outperformed SKAN in 70% of simulations. Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
+
+Channel C (Moderate spend, moderate co-spend overlap):
+MMX outperformed SKAN in 54% of simulations. Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
+
+
+### Attribution Error Analysis
+
+MMX reduced attribution error by an average of 22% on Channel A and 11% on Channel B, while performance on Channel C was net neutral.
+
+When SKAN attribution was highly distorted (e.g., combined halo + cannibalization bias exceeding 30% of channel revenue), MMX reduced net attribution error in >80% of such cases.
+
+In cases where MMX underperformed, most errors stemmed from organic-predictive entanglement (e.g., misalignment between organic latent states and revenue), or from insufficient differentiation in spend patterns between channels.
+
+
+### Simulation Diagnostics
+
+We found that MMX's ability to outperform SKAN was strongly associated with:
+
+Lower inter-channel spend correlation (ASA-like patterns)
+
+Greater scale of spend
+
+Wider priors on halo and cannibalization weights
+
+Latent state correlation between paid and organic in the 20–30% range
+
+
+These findings validate the model’s robustness in realistic settings, while also highlighting limitations in regimes of low identifiability.
+
 
 
 
