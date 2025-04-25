@@ -155,7 +155,7 @@ SharedShock is zero-centered noise shared across both observed signals and is bo
 
 Media Transformation
 
-Paid media effectiveness is modeled using a Hill function applied to adstock-transformed spend:
+Paid media effectiveness is modeled using a Hill function applied to adstock-transformed spend (in digital marketing the adstock is usually effectively ignored by setting alpha to a small constant rather than a learned parameter):
 
 <p align="center">
   <img src="images/beta_hill.png">
