@@ -1,24 +1,24 @@
 # MMX
 ## Abstract
 
-We introduce MMX (Media Mix Modeling with Latent Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo and cannibalization effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where last-touch methods fail.
+We introduce MMX (Media Mix Modeling with Latent Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo and cannibalization effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail.
 
-Through over 100 realistic simulations, MMX consistently outperforms SKAN-derived response curves in attribution accuracy, especially for low-spend or bias-prone channels, while maintaining a "do-no-harm" property when identifiability is limited. We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return.
+Through over 100 realistic simulations, MMX consistently outperforms SKAN-derived response curves in attribution accuracy, especially for low-spend or bias-prone channels, while maintaining a "do-no-harm" property in most cases when identifiability is limited. We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return.
 
 
 ## Introduction
 
-The constraints of modern digital advertising—particularly in mobile app ecosystems—have fundamentally altered the landscape of performance measurement. With the depreciation of user-level tracking and the introduction of privacy-preserving attribution systems such as Apple’s SKAN, advertisers are left with severely degraded visibility into the true causal impact of their marketing efforts. These limitations are further compounded by the presence of attribution biases like halo and cannibalization, which are not addressed by naive heuristics or deterministic last-touch assignment.
+The constraints of modern digital advertising—particularly in mobile app ecosystems—have fundamentally altered the landscape of performance measurement. With the depreciation of user-level tracking and the introduction of privacy-preserving attribution systems such as Apple’s SKAdNetwork (SKAN), advertisers are left with severely degraded visibility into the true causal impact of their marketing efforts. These limitations are further compounded by the presence of attribution biases like, censoring, poaching, halo and cannibalization, which are not addressed by naive heuristics or deterministic last-touch assignment.
 
-In this context, traditional attribution models fall short—either by oversimplifying the structure of influence across channels or by relying on granular data that is no longer accessible. In response, we introduce a Bayesian framework that directly models aggregate revenue generation while explicitly accounting for latent revenue dynamics, structured attribution distortion, and variable inter-channel identifiability.
+In this context, traditional attribution models fall short—either by oversimplifying the structure of influence across channels or by relying on granular data that is no longer accessible. In response, we introduce a Bayesian framework that directly models aggregate revenue generation while explicitly accounting for latent revenue dynamics, structured attribution distortion, and variable inter-channel identifiability, all while being monitored by the granular channel level deterministic attribution (SKAN).
 
 Rather than attempting to reverse-engineer user-level behavior, the model identifies latent signals of paid and organic contributions to revenue by conditioning on observed media inputs and adjusting for seasonal events and long-run trends. Attribution distortion from SKAN data is modeled explicitly through structured bias terms, while inference is carried out jointly to preserve identifiability and maintain internal consistency across modeled pathways.
 
-To validate the approach, we conduct a suite of simulations across a variety of marketing environments, stress-testing the model’s ability to outperform SKAN-derived response curves under different bias regimes and spend distributions. These simulations show that the model achieves its intended goal: doing no harm where SKAN is reliable, and directionally improving performance when attribution distortions are substantial.
+To validate the approach, we conduct a suite of simulations across a variety of marketing environments, stress-testing the model’s ability to outperform SKAN-derived response curves under different bias regimes and spend distributions. These simulations show that, except under more extreme conditions, the model achieves its intended goal: doing no harm where SKAN is reliable, and directionally improving performance when attribution distortions are substantial.
 
 In addition to retrospective evaluation, the model directly informs budgeting decisions via a Spend Decision Framework, which estimates the probability of profitability at different spend levels for each channel. This discrete, probabilistic framing enables more robust spend recommendations than traditional point estimates or mean-variance optimizations, especially when operating far from the data’s historical support.
 
-This work aims to offer both a methodologically grounded and practically useful alternative to existing attribution pipelines in a world where user-level ground truth is no longer available—and may never return.
+This work aims to offer both a methodologically grounded and practically useful alternative to existing attribution pipelines.
 
 
 ## Limitations of SKAN and Last-Touch Attribution
@@ -295,14 +295,10 @@ Finally, we showed how posterior sampling from the MMX framework supports probab
 
 This work introduced MMX, a Bayesian framework for integrating aggregate and scan-derived attribution signals in the presence of latent confounding, halo, and cannibalization effects. Through simulation-informed validation and a probabilistic spend optimization framework, we demonstrate that MMX can outperform SKAN-derived response curves under conditions of bias and attribution ambiguity. The approach shows particular strength in isolating paid media effects in the presence of overlapping signals and can support more informed, risk-aware marketing decisions.
 
-Future work may explore hierarchical structures, automated diagnostic classification of attribution tiers, and integration of real-world campaign data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
+Future work may explore integration with geo-hierarchical structures, automated diagnostic classification of attribution tiers, and integration of real-world campaign type and/or creative type data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
 
 
 ## References
-
-
-
-
 
 
 1. Apple Inc. (2020). SKAdNetwork. https://developer.apple.com/documentation/storekit/skadnetwork
