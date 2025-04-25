@@ -5,9 +5,9 @@
 
 We introduce MMX (Media Mix Modeling with Last-Touch Attribution Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo, cannibalization, and poaching effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail. While the primary focus of this owrk is on SKAN, the attribution biases addressed - like poaching, halo, and cannibalization - are fundamental to last-touch attribtion more broadly. S 
 
-Through over 100 realistic simulations, MMX consistently outperforms SKAN-derived response curves in causal attribution accuracy, especially for uncorrelated spend, high spend, or bias-prone channels, while maintaining a "do-no-harm" property in the majority of cases when identifiability is limited. 
+Across 100 realistic simulations, MMX outperforms SKAN-derived response curves and causal attribution in the majority of cases, particularly for channels with decorrelated spend, meaningful spend magnitude, or pronounced attribution biases. While MMX can underperform when identifiability is fundamentally limited—such as under highly correlated or low-spend conditions—it offers a statistically better attribution strategy in most practical settings. 
 
-We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return.
+We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return for each model, MMX and SKAN, allowing the researcher to select the more favorable measurement system at each scale of spend for each channel.
 
 
 ## Introduction
