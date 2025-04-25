@@ -29,19 +29,15 @@ This work aims to offer both a methodologically grounded and practically useful 
 
 The core limitation that motivates this work is the structural inadequacy of SKAN (StoreKit Ad Network) and similar last-touch attribution frameworks to capture the true causal influence of marketing activities. While SKAN was introduced by Apple as a privacy-preserving alternative to deterministic, user-level attribution, it introduces a range of measurement issues that fundamentally compromise its utility as a causal inference tool.
 
-#### 1. Attribution Bias: Halo and Cannibalization
+#### 1. Attribution Bias: Poaching, Halo, and Cannibalization
 
-SKAN relies on a last-touch windowed approach to assigning credit for installs, but installs are often influenced by both paid and organic factors. Paid media can create a halo effect, generating interest that converts later through organic means, such as branded search or app store discovery. Conversely, SKAN may over-attribute conversions to paid media that would have occurred organically—especially in the presence of strong brand equity or timed organic bursts. This is known as cannibalization. Both effects distort the observed relationship between spend and revenue and can create highly misleading performance indicators when used in media planning.
+SKAN relies on a last-touch windowed approach to assigning credit for installs, but installs are often influenced by both paid and organic factors. Even at scale, the hueristic attribution of Last-Touched Attribution (LTA) biases credit towards the channel most likely occur last in the acquisition funnel like Google Search and Apple Search Ads when "true" causality may have originated from earlier channels or as a synergistic composite of every touch point - this is known as poaching. What's more, paid media can create a halo effect, generating interest that converts later through means identified as "organic" under LTA policy, such as app store discovery after exposure to a paid ad as early as a few days before. Conversely, SKAN may over-attribute conversions to paid media that would have occurred organically — especially in the presence of strong brand equity or timed organic bursts. This is known as cannibalization. All three effects distort the observed relationship between spend and revenue under a hueristic policy like LTA and can create highly misleading performance indicators when used in media planning.
 
-#### 2. Structural Invisibility of Organic Dynamics
-
-By construction, SKAN has no visibility into organic contribution. When multiple channels contribute to awareness or intent, SKAN ignores all but the last-clicking paid source. Organic installs are not only unmodeled—they are unobserved. This leaves practitioners blind to fluctuations in organic demand, which can be substantial during app updates, seasonal trends, or viral bursts.
-
-#### 3. Sparse and Censored Observations
+#### 2. Sparse and Censored Observations
 
 SKAN reports are heavily delayed, privacy-thresholded, and aggregated. Install and revenue data are reported in coarse buckets and often only for users who exceed specific engagement thresholds. These constraints result in censored datasets that disproportionately reflect high-performing cohorts while omitting long-tail conversions. This bias is not random: it's structurally tethered to the probability of engagement, which is often correlated with campaign type, targeting, and user value. What's more, Self Reporting Networks like Meta require a limited tracking period of the first 24 hours in order to integrate with their adtech platform, which introduces noise when modeling revenue horizons at 7, 30, 90, 365 days, etc.
 
-#### 4. Opacity to Channel Interactions
+#### 3. Opacity to Channel Interactions
 
 SKAN treats channels independently and ignores the interactive effects of simultaneous campaigns. For example, simultaneous pushes in TikTok and ASA may influence installs synergistically or cannibalize each other. Last-touch attribution assigns revenue to the final channel without accounting for such interaction, further eroding its interpretability and planning utility.
 
