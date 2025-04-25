@@ -50,13 +50,13 @@ MMX aims to recover accurate estimates of paid media effectiveness while account
 
 The model jointly estimates:
 
-Channel-level revenue contributions from paid media
+- Channel-level revenue contributions from paid media
 
-Organic revenue trends driven by latent demand
+- Organic revenue trends driven by latent demand
 
-The true aggregate revenue (used as ground truth)
+- The true aggregate revenue (used as ground truth)
 
-SKAN-reported revenue (used as noisy attribution signal)
+- SKAN-reported revenue (used as noisy attribution signal)
 
 
 This joint structure allows the model to learn attribution adjustments informed by both the spend-driven media response curves and deviations between observed SKAN values and total revenue.
@@ -71,13 +71,13 @@ The shared state is also modulated by a local linear trend, composed of a time-v
 
 Unlike SKAN, MMX explicitly incorporates:
 
-Halo effects: Paid media can increase organic installs via brand spillover or search behavior.
+- Halo effects: Paid media can increase organic installs via brand spillover or search behavior.
 
-Cannibalization effects: Paid media may steal credit for installs that would have occurred organically.
+- Cannibalization effects: Paid media may steal credit for installs that would have occurred organically.
 
-Poaching effects: Paid media may steal credit for installs should be credited to other paid channels.
+- Poaching effects: Paid media may steal credit for installs should be credited to other paid channels.
 
-Censoring effects: Campaigns that do not meet the threshold for install volume may be censored and return no information, scales inversely with spend.
+- Censoring effects: Campaigns that do not meet the threshold for install volume may be censored and return no information, scales inversely with spend.
 
 These effects are modeled directly in the SKAN likelihood, using parameterized terms informed by spend and organic volume. This structure allows MMX to disentangle true channel lift from attribution bias and helps the model reject SKAN estimates when they conflict with aggregate revenue behavior.
 
@@ -85,10 +85,9 @@ These effects are modeled directly in the SKAN likelihood, using parameterized t
 
 Paid media effects are modeled through a two-step transformation:
 
-Adstock: Models lagged decay in user response to past spend. Usually assumed to be zero in digital marketing but can be set as a small constant like 0.1, or informed by previous experiments 
+- Adstock: Models lagged decay in user response to past spend. Usually assumed to be zero in digital marketing but can be set as a small constant like 0.1, or informed by previous experiments 
 
-Hill function: Captures saturation and diminishing returns at higher spend levels.
-
+- Hill function: Captures saturation and diminishing returns at higher spend levels.
 
 Each channel has unique parameters (β, k, slope) estimated from data, allowing for customized elasticity profiles.
 
@@ -99,7 +98,7 @@ MMX includes binary and continuous event covariates (e.g., holidays, promotions,
 
 ## Model Specification
 
-We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes. See model_specification_math.pdf for formal model specification which is currently a work in progress.
+We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes. See model_specification_math.pdf for formal model specification (currently a work in progress).
 
 
 ## Simulation Strategy
@@ -132,13 +131,13 @@ Gaussian noise is added to SKAN observations, completing the distortion relative
 
 For each simulation:
 
-We train MMX and a benchmark SKAN-derived response curve model on the same synthetic data.
+- We train MMX and a benchmark SKAN-derived response curve model on the same synthetic data.
 
-The benchmark model uses a Bayesian framework with fixed event controls and a linear trend index, but no latent states or SKAN de-biasing.
+- The benchmark model uses a Bayesian framework with fixed event controls and a linear trend index, but no latent states or SKAN de-biasing.
 
-For each channel, we compute Mean Absolute Percentage Error (MAPE) against the known true response curve.
+- For each channel, we compute Mean Absolute Percentage Error (MAPE) against the known true response curve.
 
-Performance is compared across MMX and SKAN using directional accuracy, percentage of simulations where MMX outperforms, and diagnostic correlation analyses.
+- Performance is compared across MMX and SKAN using directional accuracy, percentage of simulations where MMX outperforms, and diagnostic correlation analyses.
 
 
 #### Scope of Simulations
@@ -174,13 +173,13 @@ In cases where MMX underperformed, most errors stemmed from organic-predictive e
 
 We found that MMX's ability to outperform SKAN was strongly associated with:
 
-Lower inter-channel spend correlation (ASA-like patterns)
+- Lower inter-channel spend correlation (ASA-like patterns)
 
-Greater scale of spend
+- Greater scale of spend
 
-Wider priors on halo and cannibalization weights
+- Wider priors on halo and cannibalization weights
 
-Latent state correlation between paid and organic in the 20–30% range
+- Latent state correlation between paid and organic in the 20–30% range
 
 ## Spend Decision Framework
 
@@ -194,9 +193,9 @@ For each channel, we simulate the posterior predictive distribution of revenue a
 
 where:
 
- is the predicted revenue at spend level ,
+ - is the predicted revenue at spend level ,
 
- is the threshold return-on-spend (e.g., 1.0 for breakeven).
+ - is the threshold return-on-spend (e.g., 1.0 for breakeven).
 
 
 Each posterior draw constitutes a single trial, and profitability is evaluated as the fraction of draws exceeding the threshold. This approach naturally captures epistemic uncertainty and avoids overconfidence in under-supported spend regions.
@@ -244,11 +243,11 @@ Each simulation follows these core principles:
 
 4. SKAN Bias Simulation: We simulate SKAN-observed revenue by introducing three primary distortions:
 
-Censoring: A function of spend magnitude, where small campaigns are under-represented.
+- Censoring: A function of spend magnitude, where small campaigns are under-represented.
 
-Cannibalization: Paid channels steal credit from organics and other channels, modeled via log-spend interactions.
+- Cannibalization: Paid channels steal credit from organics and other channels, modeled via log-spend interactions.
 
-Halo: Paid channels also generate unattributed organic lift, under-reflected in SKAN.
+- Halo: Paid channels also generate unattributed organic lift, under-reflected in SKAN.
 
 
 
@@ -265,13 +264,13 @@ Halo: Paid channels also generate unattributed organic lift, under-reflected in 
 
 7. Tiered Challenge Design: Simulations span a spectrum of difficulty:
 
-Low vs. high correlation between paid and organic latent states.
+- Low vs. high correlation between paid and organic latent states.
 
-High vs. low SKAN bias intensity.
+- High vs. low SKAN bias intensity.
 
-High vs. low channel collinearity.
+- High vs. low channel collinearity.
 
-Rich vs. sparse campaign data availability.
+- Rich vs. sparse campaign data availability.
 
 
 This approach enables us to diagnose the boundary conditions under which MMX improves attribution versus when it fails to meaningfully outperform SKAN.
