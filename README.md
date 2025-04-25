@@ -157,12 +157,11 @@ Across 100 simulation runs, the MMX model consistently demonstrated an improveme
 Channel A (High spend, low correlation with other channels):
 MMX outperformed SKAN in 93% of simulations. Performance was robust across both high and low halo/cannibalization regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
 
-Channel B (Low total spend, high co-spend with other channels):
-MMX outperformed SKAN in 70% of simulations. Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
+Channel B (Moderate spend, moderate co-spend overlap):
+MMX outperformed SKAN in 70% of simulations. Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
 
-Channel C (Moderate spend, moderate co-spend overlap):
-MMX outperformed SKAN in 54% of simulations. Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
-
+Channel C (Low total spend, high co-spend with other channels):
+MMX outperformed SKAN in 54% of simulations. Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
 
 #### Attribution Error Analysis
 
