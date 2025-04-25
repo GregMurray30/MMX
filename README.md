@@ -225,10 +225,127 @@ s_{\min} = \min(\text{Observed Spend}) + \epsilon, \quad s_{\max} = \max(\text{O
 
 This prevents unrealistic inferences far beyond the empirical support and ensures that optimization operates within a calibrated, interpretable region.
 
-
-
 These findings validate the model’s robustness in realistic settings, while also highlighting limitations in regimes of low identifiability.
 
+
+## Simulation Study Design
+
+To empirically evaluate the MMX framework, we constructed a simulation system that reflects realistic media spend patterns, event-driven seasonality, and SKAN-style measurement limitations. The purpose of this system is to generate synthetic datasets with known ground-truth attribution and then assess the ability of MMX to recover causal spend-response relationships under varying conditions.
+
+Each simulation follows these core principles:
+
+1. Realistic Covariates: We use historical media spend patterns as a template, preserving campaign rhythms, budget scaling behavior, and channel-level sparsity. Key events (e.g., holidays, launches) are injected to reflect seasonality.
+
+
+2. Latent State Construction: Aggregate monetization is governed by a shared latent ARMA(3,1) state with an overlaid local linear trend. The latent state is then partitioned into paid and organic components using channel- and time-specific multipliers (δ_paid, δ_org). Organic deviation is guided by a transformed version of Google Trends, while paid deviation follows an AR(1) process.
+
+
+3. Causal Media Effects: Channel-level response curves are generated using known β, k, and slope parameters passed through a Hill-Adstock transformation. These define the true revenue attributable to each channel.
+
+
+4. SKAN Bias Simulation: We simulate SKAN-observed revenue by introducing three primary distortions:
+
+Censoring: A function of spend magnitude, where small campaigns are under-represented.
+
+Cannibalization: Paid channels steal credit from organics and other channels, modeled via log-spend interactions.
+
+Halo: Paid channels also generate unattributed organic lift, under-reflected in SKAN.
+
+
+
+5. Performance Benchmarking: For each simulation, we compare the MMX-inferred response curves to:
+
+(a) the known true causal curves, and
+
+(b) curves derived naively from SKAN-observed revenue using standard Hill curve estimation.
+
+
+
+6. Outcome Metrics: We evaluate channel-level performance using mean absolute percentage error (MAPE) across a range of realistic spend scales (e.g., $2K to $25K). We also assess directional accuracy (whether MMX improves upon SKAN).
+
+
+7. Tiered Challenge Design: Simulations span a spectrum of difficulty:
+
+Low vs. high correlation between paid and organic latent states.
+
+High vs. low SKAN bias intensity.
+
+High vs. low channel collinearity.
+
+Rich vs. sparse campaign data availability.
+
+
+This approach enables us to diagnose the boundary conditions under which MMX improves attribution versus when it fails to meaningfully outperform SKAN.
+
+
+
+## Discussion
+
+The results presented across 100 simulations demonstrate that MMX can substantially improve attribution accuracy over SKAN-derived response curves under certain conditions. However, this improvement is not universal. While Channel A (representing a channel with relatively isolated spend and high aggregate signal strength) consistently benefitted from MMX, Channel B (moderate spend, frequent halo interference) and Channel C (low-scale, highly correlated spend with other channels) yielded mixed results.
+
+This variation highlights an important feature of the MMX framework: its performance is conditional on identifiable structure in the data. In simulations with high halo or cannibalization effects, MMX provided strong corrections to SKAN, which otherwise systematically misattributed revenue. But when scan-derived signals were less biased or dominated by stochastic noise, MMX occasionally overcorrected—especially in the presence of poorly identifiable latent states.
+
+A key takeaway is that MMX functions best not as a blanket replacement for SKAN but as an intelligent overlay. It adds value when SKAN’s assumptions fail—such as in multi-channel overlap scenarios or when aggregate revenue strongly diverges from scan-labeled attribution. In contrast, when scan labels are already approximately correct (e.g., due to clean spend windows or dominant last-touch positioning), MMX preserves performance but does not necessarily outperform.
+
+The simulations also expose the tradeoff between interpretability and flexibility. Halo and cannibalization were modeled with structural decompositions, but even with generous priors, identifiability issues emerged when signal strength was low. Future work might explore a learned net-effect bias term, or a hierarchical structure to share information across channels.
+
+Finally, we showed how posterior sampling from the MMX framework supports probabilistic spend optimization. Rather than relying on point estimates or static confidence intervals, our framework produces calibrated probabilities of achieving profitability at various spend levels, reflecting local posterior geometry. This decision-aware framing is particularly useful when exploring new budget allocations, enabling marketing managers to make informed bets grounded in uncertainty.
+
+## Conclusion
+
+This work introduced MMX, a Bayesian framework for integrating aggregate and scan-derived attribution signals in the presence of latent confounding, halo, and cannibalization effects. Through simulation-informed validation and a probabilistic spend optimization framework, we demonstrate that MMX can outperform SKAN-derived response curves under conditions of bias and attribution ambiguity. The approach shows particular strength in isolating paid media effects in the presence of overlapping signals and can support more informed, risk-aware marketing decisions.
+
+Future work may explore hierarchical structures, automated diagnostic classification of attribution tiers, and integration of real-world campaign data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
+
+
+## References
+
+
+
+
+
+
+1. Apple Inc. (2020). SKAdNetwork. https://developer.apple.com/documentation/storekit/skadnetwork
+
+2. Brodersen, K. H., Gallusser, F., Koehler, J., Remy, N., & Scott, S. L. (2015). Inferring causal impact using Bayesian structural time-series models. Annals of Applied Statistics, 9(1), 247–274. https://doi.org/10.1214/14-AOAS788
+
+3. Choi, H., & Varian, H. (2012). Predicting the Present with Google Trends. Economic Record, 88(s1), 2–9. https://doi.org/10.1111/j.1475-4932.2012.00809.x
+
+4. Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian Data Analysis (3rd ed.). CRC Press.
+
+5. Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. Statistics and Computing, 27(5), 1413–1432. https://doi.org/10.1007/s11222-016-9696-4
+
+6. West, M., & Harrison, J. (1997). Bayesian Forecasting and Dynamic Models (2nd ed.). Springer.
+
+7. Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015). Time Series Analysis: Forecasting and Control (5th ed.). Wiley.
+
+8. Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. Journal of Educational Psychology, 66(5), 688–701. https://doi.org/10.1037/h0037350
+
+9. Imbens, G. W., & Rubin, D. B. (2015). Causal Inference in Statistics, Social, and Biomedical Sciences. Cambridge University Press.
+
+10. Lewis, R. A., Rao, J. M., & Reiley, D. H. (2011). Here, There, and Everywhere: Correlated Online Behaviors Can Lead to Overestimates of the Effects of Advertising. Proceedings of the 20th International Conference on World Wide Web, 157–166. https://doi.org/10.1145/1963405.1963436
+
+11. Xu, Y., Chen, N., Fernandez, A., Sinno, O., & Bhasin, A. (2015). From Infrastructure to Culture: A/B Testing Challenges in Large Scale Social Networks. Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 2227–2236. https://doi.org/10.1145/2783258.2788583
+
+12. Fong, C., Hazlett, C., & Imai, K. (2018). Covariate balancing propensity score for a continuous treatment: Application to the efficacy of political advertisements. Annals of Applied Statistics, 12(1), 156–177. https://doi.org/10.1214/17-AOAS1101
+
+13. Sawaya, T., Zhang, A., & Schwartz, E. M. (2022). Bayesian Media Mix Modeling at Scale: A Case Study. Marketing Science Institute Working Paper. https://ssrn.com/abstract=4043459
+
+14. Danaher, P. J., & Brodie, R. J. (2005). The Effect of Telecommunications Advertising on Customer Retention. Journal of Marketing, 69(3), 49–65. https://doi.org/10.1509/jmkg.69.3.49.66363
+
+15. Chan, D., Ge, R., Gershman, A., & Vaver, J. (2010). Evaluating Online Ad Campaigns in a Pipeline: Causal Modeling and Machine Learning at Scale. Proceedings of the 16th ACM SIGKDD, 7–16. https://doi.org/10.1145/1835804.1835807
+
+16. Athey, S., & Imbens, G. W. (2017). The State of Applied Econometrics: Causality and Policy Evaluation. Journal of Economic Perspectives, 31(2), 3–32. https://doi.org/10.1257/jep.31.2.3
+
+17. Carvalho, C. M., Polson, N. G., & Scott, J. G. (2010). The Horseshoe Estimator for Sparse Signals. Biometrika, 97(2), 465–480. https://doi.org/10.1093/biomet/asq017
+
+18. McElreath, R. (2020). Statistical Rethinking: A Bayesian Course with Examples in R and Stan (2nd ed.). CRC Press.
+
+19. Hernán, M. A., & Robins, J. M. (2020). *Causal Inference: What If*. Chapman & Hall/CRC.
+    
+20. Taddy, M., Gardner, M., Chen, L., & Draper, D. (2016). A nonparametric Bayesian analysis of heterogeneous treatment effects in digital experimentation. *Journal of Business & Economic Statistics*, 34(4), 661–672.
+
+21. Stan Development Team. (2024). Stan Modeling Language Users Guide and Reference Manual. https://mc-stan.org
 
 
 
