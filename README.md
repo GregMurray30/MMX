@@ -211,7 +211,10 @@ The seasonal event controls are modeled as an affine function:
 
 Finally, the full likelihood of the model factorizes into independent components for and, conditioned on the latent states, media transformations, and shared shock. This reflects the assumption that, after accounting for the structural drivers and shared residual coupling, the remaining errors in aggregate revenue and SKAN revenue are independent:
 <p align="center">
-  <img src="images/events.png">
+  <img src="images/joint_lik.png">
+</p>
+<p align="center">
+  <img src="images/yagg_yskan_rvs.png">
 </p>
 
 ## Simulation Strategy
