@@ -3,9 +3,11 @@
 
 ## Abstract
 
-We introduce MMX (Media Mix Modeling with Latent Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo and cannibalization effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail.
+We introduce MMX (Media Mix Modeling with Last-Touched Attribution Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. In this paper, we primarily frame the solution as a means of improving SKAN, but it extends to any heuristically derived attribution policy measurement. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo, cannibalization, and poaching effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail. 
 
-Through over 100 realistic simulations, MMX consistently outperforms SKAN-derived response curves in attribution accuracy, especially for uncorrelated spend, high spend, or bias-prone channels, while maintaining a "do-no-harm" property in most cases when identifiability is limited. We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return.
+Through over 100 realistic simulations, MMX consistently outperforms SKAN-derived response curves in causal attribution accuracy, especially for uncorrelated spend, high spend, or bias-prone channels, while maintaining a "do-no-harm" property in the majority of cases when identifiability is limited. 
+
+We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return.
 
 
 ## Introduction
