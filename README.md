@@ -296,7 +296,7 @@ Finally, we showed how posterior sampling from the MMX framework supports probab
 
 This work introduced MMX, a Bayesian framework for integrating aggregate and scan-derived attribution signals in the presence of latent confounding, halo, and cannibalization effects. Through simulation-informed validation and a probabilistic spend optimization framework, we demonstrate that MMX can outperform SKAN-derived response curves under conditions of bias and attribution ambiguity. The approach shows particular strength in isolating paid media effects in the presence of overlapping signals and can support more informed, risk-aware marketing decisions.
 
-Future work may explore integration with geo-hierarchical structures, automated diagnostic classification of attribution tiers, and integration of real-world campaign type and/or creative type data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
+Future work may explore integration with geo-hierarchical structures, automated diagnostic classification of attribution tiers, data properties determinant of MMX superiority and integration of real-world campaign type and/or creative type data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
 
 
 ## References
