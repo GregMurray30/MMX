@@ -103,7 +103,7 @@ We define a Bayesian generative model that jointly explains observed aggregate r
 We model aggregate weekly revenue as a Gaussian random variable centered on a structural baseline and modulated by latent paid and organic states:
 
 <p align="center">
-  <img src="https://github.com/GregMurray30/MMX/images/exp_y_agg.png">
+  <img src="images/exp_y_agg.png">
 </p>
 
 The expected revenue is defined as:
