@@ -94,7 +94,7 @@ Each channel has unique parameters (β, k, slope) estimated from data, allowing 
 
 #### 5. Events and Seasonality
 
-MMX includes binary and continuous event covariates (e.g., holidays, playoffs, product launches) that modify the seasonality and baseline demand levels multiplicatively. These covariates are shared across both paid and organic components to reflect system-wide behavior shifts.
+MMX includes binary and continuous event covariates (e.g., holidays, promotions, product launches) that modify the seasonality and baseline demand levels multiplicatively. These covariates are shared across both paid and organic components to reflect system-wide behavior shifts. While integrating the seasonality geometrically expands the parameter space dimensionality, its complexity is mitigated by the typical sparsity of such events but more critically, the objective of this modeling processs is to attribute to the paid and organic constituents not to attribute to organics heuristically, which is what results from an additive integration into the model.
 
 
 ## Model Specification
