@@ -1,5 +1,5 @@
 # MMX
-### Media Mix Modeling with Latent Extensions for SKAN Bias Correction
+### Media Mix Modeling with LTA Extensions
 
 ## Abstract
 
