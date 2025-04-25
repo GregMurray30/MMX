@@ -98,7 +98,105 @@ MMX includes binary and continuous event covariates (e.g., holidays, promotions,
 
 ## Model Specification
 
-We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes. See model_specification_math.pdf for formal model specification (currently a work in progress).
+We define a Bayesian generative model that jointly explains observed aggregate revenue ($Y_t^{\text{agg}}$) and SKAN-derived channel revenue ($Y_{t,c}^{\text{skan}}$) using latent monetization states, transformed media effects, seasonal signals, and attribution bias mechanisms. The objective is to extract accurate estimates of the underlying media response curves while reconciling observable but biased SKAN signals with aggregate outcomes.
+
+We model aggregate weekly revenue as a Gaussian random variable centered on a structural baseline and modulated by latent paid and organic states:
+
+Y_t \sim \mathcal{N} \left( \mathbb{E}[Y_t], \, \sigma^2_{\text{agg}} \right)
+
+The expected revenue is defined as:
+
+\mathbb{E}[Y_t] = \left( \text{CommonTrend}_t + \sum_{j=1}^{J} \gamma_j \cdot \text{Event}_j(t) \right) \cdot \left[ \text{state}_{\text{paid},t} \cdot \sum_{c \in \text{Paid}} \text{MediaEffect}_{c,t} + \text{state}_{\text{org},t} \cdot \text{OrganicBase}_t \right]
+
+
+---
+
+SKAN Measurement Model
+
+The SKAN-observed revenue is modeled separately as:
+
+Y_{\text{skan},t} \sim \mathcal{N} \left( \mathbb{E}[Y_{\text{skan},t}], \, \sigma^2_{\text{skan}} \right)
+
+\mathbb{E}[Y_{\text{skan},t}] = \sum_{c \in \text{Paid}} \text{MediaEffect}_{c,t} \cdot \text{BiasAdj}_{c,t} + \text{SharedShock}_t
+
+The bias adjustment term accounts for systematic over- and under-attribution:
+
+\text{BiasAdj}_{c,t} = 1 + \text{Poaching}_{c,t} + \text{Cannibalization}_{c,t} - \text{Halo}_{c,t}
+
+Poaching represents cross-channel stealing:
+
+\text{Poaching}_{c,t} = \sum_{j \neq c} \text{poach\_effect}_c \cdot \log\left(1 + \text{Spend}_{j,t}\right)
+
+Cannibalization models paid steal from organics under attribution constraints:
+
+\text{Cannibalization}_{c,t} = \omega_c \cdot \text{CannibRole}_c \cdot \log\left(1 + \text{Spend}_{c,t}\right) \cdot \log\left(1 + \text{OrganicVolume}_t\right)
+
+Halo reflects paid-driven installs that appear organic:
+
+\text{Halo}_{c,t} = \nu_c \cdot \text{HaloRole}_c \cdot \log\left(1 + \text{Spend}_{c,t}\right)
+
+SharedShock is zero-centered noise shared across both observed signals and is bounded to prevent overfitting:
+
+\text{SharedShock}_t \sim \mathcal{N}(0, \sigma^2_{\text{shared}})
+\quad \text{with} \quad
+|\text{SharedShock}_t| \leq 0.2 \cdot |Y_t - \mathbb{E}[Y_t]|
+
+
+---
+
+Media Transformation
+
+Paid media effectiveness is modeled using a Hill function applied to adstock-transformed spend:
+
+\text{MediaEffect}_{c,t} = \frac{ \beta_c }{ 1 + \left( \frac{ A_c(\text{Spend}_{c,t}) }{ k_c} \right)^{-\text{slope}_c} }
+
+A_c(\text{Spend}_{c,t}) = \sum_{l=0}^{L_c} \alpha_c^l \cdot \text{Spend}_{c,t-l}, \quad \alpha_c^l = \lambda_c^l (1 - \lambda_c), \quad 0 < \lambda_c < 1
+
+
+---
+
+Common Structural Trend
+
+We model long-run variation with a local linear trend:
+
+\text{CommonTrend}_t = \text{level}_{t}
+\quad \text{with} \quad
+\text{level}_{t} = \text{level}_{t-1} + \text{slope}_{t-1} + \epsilon^{(\text{level})}_t, \quad \epsilon^{(\text{level})}_t \sim \mathcal{N}(0, \sigma^2_{\text{level}})
+
+\text{slope}_{t} = \text{slope}_{t-1} + \eta_t, \quad \eta_t \sim \mathcal{N}(0, \sigma^2_{\text{slope}})
+
+
+---
+
+Latent Shared State (ARMA(3,1))
+
+The shared latent state evolves via an ARMA(3,1) process:
+
+\text{state}_{\text{shared},t} = \sum_{p=1}^{3} \phi_p \cdot \text{state}_{\text{shared},t-p} + \epsilon_t + \theta_1 \cdot \epsilon_{t-1},
+\quad \epsilon_t \sim \mathcal{N}(0, \sigma^2_{\text{shared\_innovation}})
+
+
+---
+
+Deviations from Shared State
+
+Paid state deviations follow an AR(1) process:
+
+\delta_{\text{paid},t} = \phi_{\text{paid}} \cdot \delta_{\text{paid},t-1} + \epsilon^{(\text{paid})}_t,
+\quad \epsilon^{(\text{paid})}_t \sim \mathcal{N}(0, \sigma^2_{\delta_{\text{paid}}})
+
+Organic deviations are guided by transformed Google Trends:
+
+\delta_{\text{org},t} \sim \mathcal{N} \left( \beta_{\text{gt}} \cdot \text{GoogleTrends}_t, \, \sigma^2_{\delta_{\text{org}}} \right)
+
+The final paid and organic states are:
+
+\text{state}_{\text{paid},t} = \text{state}_{\text{shared},t} \cdot \delta_{\text{paid},t},
+\quad
+\text{state}_{\text{org},t} = \text{state}_{\text{shared},t} \cdot \delta_{\text{org},t}
+
+
+
 
 <p align="center">
   <img src="https://github.com/GregMurray30/MMX/blob/main/logit_dgf.png">
