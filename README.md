@@ -1,4 +1,6 @@
 # MMX
+### Media Mix Modeling with Latent Extensions
+
 ## Abstract
 
 We introduce MMX (Media Mix Modeling with Latent Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo and cannibalization effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail.
