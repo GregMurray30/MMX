@@ -39,7 +39,7 @@ SKAN reports are heavily delayed, privacy-thresholded, and aggregated. Install a
 
 #### 3. Opacity to Channel Interactions
 
-SKAN treats channels independently and ignores the interactive effects of simultaneous campaigns. For example, simultaneous pushes in TikTok and ASA may influence installs synergistically or cannibalize each other. Last-touch attribution assigns revenue to the final channel without accounting for such interaction, further eroding its interpretability and planning utility.
+SKAN treats channels independently and ignores the interactive effects of simultaneous campaigns. For example, simultaneous pushes in TikTok and ASA may influence installs synergistically or cannibalize each other (poaching). Last-touch attribution assigns revenue to the final channel without accounting for such interaction, further eroding its interpretability and planning utility.
 
 
 ## Model Overview
