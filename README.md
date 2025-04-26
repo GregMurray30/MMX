@@ -107,7 +107,7 @@ We model aggregate weekly revenue as a Gaussian random variable centered on a st
 
 The expected revenue is defined as:
 
-<img width="683" alt="image" src="https://github.com/user-attachments/assets/218a0035-c0ea-433e-9e8c-c538e2625539" />
+<img width="872" alt="image" src="https://github.com/user-attachments/assets/f21262c9-4e67-40a3-8112-07da64800759" />
 
 ---
 
