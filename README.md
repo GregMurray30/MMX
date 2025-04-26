@@ -328,7 +328,7 @@ Each posterior draw constitutes a single trial, and profitability is evaluated a
 
 In addition to profitability, we compute the expected return conditional on success, which serves as a risk-adjusted opportunity signal. Let:
 
-\mathbb{E}[R(s) \mid \text{Profitable}]
+<img width="295" alt="image" src="https://github.com/user-attachments/assets/bcdfeb88-78ac-4eed-8817-06bd216f2b35" />
 
 be the average return across posterior draws where . This conditional expectation informs which spend levels not only have a high chance of profitability, but also meaningful upside.
 
@@ -343,7 +343,7 @@ Together, these allow stakeholders to balance likelihood of success with magnitu
 
 We restrict evaluation to spend levels supported by the observed distribution in the training data, or those within a conservative extrapolation margin. For each channel, we define a channel-specific spend support , where:
 
-s_{\min} = \min(\text{Observed Spend}) + \epsilon, \quad s_{\max} = \max(\text{Observed Spend})
+<img width="539" alt="image" src="https://github.com/user-attachments/assets/a14f10d5-90a7-4a30-917e-f1f9e7189ce2" />
 
 This prevents unrealistic inferences far beyond the empirical support and ensures that optimization operates within a calibrated, interpretable region.
 
@@ -415,7 +415,7 @@ In sumary, while MMX introduces some additional complexity, it offers a statisti
 
 ## Conclusion
 
-This work introduced MMX, a Bayesian framework for integrating aggregate and SKAN-derived attribution signals in the presence of latent confounding, halo, and cannibalization effects. Through simulation-informed validation and a probabilistic spend optimization framework, we demonstrate that MMX can outperform SKAN-derived response curves under conditions of bias and attribution ambiguity. The approach shows particular strength in isolating paid media effects in the presence of overlapping signals and can support more informed, risk-aware marketing decisions.
+This work introduced MMX, a Bayesian framework for integrating aggregate and SKAN-derived attribution signals in the presence of latent confounding, poaching, censoring, halo, and cannibalization effects. Through simulation-informed validation and a probabilistic spend optimization framework, we demonstrate that MMX can outperform SKAN-derived response curves under conditions of bias and attribution ambiguity. The approach shows particular strength in isolating paid media effects in the presence of overlapping signals and can support more informed, risk-aware marketing decisions.
 
 Future work may explore integration with geo-hierarchical structures, automated diagnostic classification of attribution tiers, data properties determinant of MMX superiority and integration of real-world campaign type and/or creative type data. MMX provides a foundation for both theoretical rigor and applied insight in the evolving space of privacy-safe marketing attribution.
 
