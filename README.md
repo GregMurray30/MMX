@@ -313,7 +313,7 @@ A key contribution of this work is the development of a spend decision-making fr
 
 For each channel, we simulate the posterior predictive distribution of revenue as a function of spend using posterior draws of the Beta–Hill parameters from the Stage 2 causal model. We define profitability at a given spend level as:
 
-\text{Profitability}(s) = \mathbb{P}\left( \frac{R(s)}{s} \geq \tau \right)
+<img width="318" alt="image" src="https://github.com/user-attachments/assets/d8e03bd4-64f4-43d1-9bb9-fd2736b0c34d" />
 
 where:
 
