@@ -18,6 +18,9 @@ In this context, traditional attribution models fall short—either by oversimpl
 
 Rather than attempting to reverse-engineer user-level behavior, the model identifies latent signals of paid and organic contributions to revenue by conditioning on observed media inputs and adjusting for seasonal events and long-run trends. Attribution distortion from SKAN data is modeled explicitly through structured bias terms, while inference is carried out jointly to preserve identifiability and maintain internal consistency across modeled pathways.
 
+Traditional methods that rely on SKAN observations attempt to correct for measurement bias, but leave the deeper causal structure unmodeled. MMX addresses a more fundamental problem: not merely de-biasing the observable signals, but de-confounding the latent processes that govern revenue generation. By reconstructing these latent states and their interactions with media spend, MMX provides robust causal inference even when attribution data is noisy, incomplete, or biased.
+
+
 To validate the approach, we conduct a suite of simulations across a variety of marketing environments, stress-testing the model’s ability to outperform SKAN-derived response curves under different bias regimes and spend distributions. These simulations show that, under a broad range of realistic conditions, the MMX model improves attribution quality relative to SKAN in the majority of cases, particularly when spend patterns are decorrelated and magnitudes are sufficient. However, in settings with highly correlated or very small spend, MMX can underperform, reflecting fundamental identifiability limits rather than modeling error.
 
 In addition to retrospective evaluation, the model directly informs budgeting decisions via a Spend Decision Framework, which estimates the probability of profitability at different spend levels for each channel. This discrete, probabilistic framing enables more robust spend recommendations than traditional point estimates or mean-variance optimizations, especially when operating far from the data’s historical support.
@@ -29,17 +32,25 @@ This work aims to offer both a methodologically grounded and practically useful 
 
 The core limitation that motivates this work is the structural inadequacy of SKAN (StoreKit Ad Network) and similar last-touch attribution frameworks to capture the true causal influence of marketing activities. While SKAN was introduced by Apple as a privacy-preserving alternative to deterministic, user-level attribution, it introduces a range of measurement issues that fundamentally compromise its utility as a causal inference tool.
 
+
+
 #### 1. Attribution Bias: Poaching, Halo, and Cannibalization
 
 SKAN relies on a last-touch windowed approach to assigning credit for installs, but installs are often influenced by both paid and organic factors. Even at scale, the hueristic attribution of last-touch attribution (LTA) biases credit towards the channel most likely occur last in the acquisition funnel like Google Search and Apple Search Ads when "true" causality may have originated from earlier channels or as a synergistic composite of every touch point - this is known as poaching. What's more, paid media can create a halo effect, generating interest that converts later through means identified as "organic" under LTA policy, such as app store discovery after exposure to a paid ad as early as a few days before. Conversely, SKAN may over-attribute conversions to paid media that would have occurred organically — especially in the presence of strong brand equity or timed organic bursts. This is known as cannibalization. All three effects distort the observed relationship between spend and revenue under a hueristic policy like LTA and can create highly misleading performance indicators when used in media planning.
 
-#### 2. Sparse and Censored Observations
+#### 2. Naive to confounders
+
+ Even in the absence of attribution biases such as cannibalization or censoring, SKAN signals are causally incomplete. Because SKAN measures revenue attributed to spend without observing the underlying latent states that influence user behavior, it cannot distinguish between outcomes driven by spend and outcomes driven by unobserved fluctuations in underlying demand. As a result, even perfectly unbiased SKAN observations systematically confound causal inference unless the latent structure is explicitly modeled. Recovering true causal effects from SKAN-derived revenue estimates without accounting for latent states is therefore fundamentally unreliable.
+
+
+#### 3. Sparse and Censored Observations
 
 SKAN reports are heavily delayed, privacy-thresholded, and aggregated. Install and revenue data are reported in coarse buckets and often only for users who exceed specific engagement thresholds. These constraints result in censored datasets that disproportionately reflect high-performing cohorts while omitting long-tail conversions. This bias is not random: it's structurally tethered to the probability of engagement, which is often correlated with campaign type, targeting, and user value. What's more, Self Reporting Networks like Meta require a limited tracking period of the first 24 hours in order to integrate with their adtech platform, which introduces noise when modeling revenue horizons at 7, 30, 90, 365 days, etc.
 
-#### 3. Opacity to Channel Interactions
+#### 4. Opacity to Channel Interactions
 
 SKAN treats channels independently and ignores the interactive effects of simultaneous campaigns. For example, simultaneous pushes in TikTok and ASA may influence installs synergistically or cannibalize each other (poaching). Last-touch attribution assigns revenue to the final channel without accounting for such interaction, further eroding its interpretability and planning utility.
+
 
 
 ## Model Overview
