@@ -279,8 +279,12 @@ We conduct 100 simulations across a spectrum of latent state correlations (15%�
 Simulation results show that the MMX framework improves attribution quality relative to baseline SKAN postbacks in the majority of realistic settings. Performance varies systematically by channel, reflecting differences in spend magnitude, cross-channel spend correlation, and effective paid–organic separation.
 
 #### Performance Metrics
-Channel A (High spend, low correlation with other channels):
-MMX outperformed SKAN in 83% of simulations. Performance was robust across both high and low halo/cannibalization regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
+ASA (High spend, low correlation with other channels):
+- Avg MAPE:
+- - MMX 95
+- - MMM 596
+- - SKAN 146
+ Performance was robust across both high and low halo/cannibalization regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
 
 Channel B (Moderate spend, moderate co-spend overlap):
 MMX outperformed SKAN in 88% of simulations. Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
