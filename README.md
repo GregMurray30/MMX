@@ -327,18 +327,9 @@ Overall, MMX provides a more robust foundation for revenue attribution under SKA
 
 
 
-#### Attribution Error Analysis
-
-MMX reduced attribution error by an average of 22% on Channel A and 11% on Channel B, while performance on Channel C was net neutral.
-
-When SKAN attribution was highly distorted (e.g., combined halo + cannibalization bias exceeding 30% of channel revenue), MMX reduced net attribution error in >80% of such cases.
-
-In cases where MMX underperformed, most errors stemmed from organic-predictive entanglement (e.g., misalignment between organic latent states and revenue), or from insufficient differentiation in spend patterns between channels.
-
-
 #### Simulation Diagnostics
 
-We found that MMX's ability to outperform SKAN was strongly associated with:
+We found that MMX's ability to outperform SKAN and MMM was strongly associated with:
 
 - Lower inter-channel spend correlation (ASA-like patterns)
 
@@ -347,6 +338,8 @@ We found that MMX's ability to outperform SKAN was strongly associated with:
 - Wider priors on halo and cannibalization weights
 
 - Latent state correlation between paid and organic in the 20–30% range
+
+- Cases where the long run trend and seasonality were well addressed by a linear long run trend and Fourier-style seasonality, as well as stationary and symmetrical paid-organic latent states. These conditions can exist in a real DGP but are not *guaranteed* to exist. The benefit of MMX is it can handle these "easy" regimes well, comparable and sometimes even better than alternative solutions, but more importantly, it can handle arbitrarily complex regimes that the cause the alternative solutions to severely misestimate.
 
 ## Spend Decision Framework
 
