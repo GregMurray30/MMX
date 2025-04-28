@@ -339,7 +339,7 @@ We found that MMX's ability to outperform SKAN and MMM was strongly associated w
 
 - Latent state correlation between paid and organic in the 20–30% range
 
-- Cases where the long run trend and seasonality were well addressed by a linear long run trend and Fourier-style seasonality, as well as stationary and symmetrical paid-organic latent states. These conditions can exist in a real DGP but are not *guaranteed* to exist. The benefit of MMX is it can handle these "easy" regimes well, comparable and sometimes even better than alternative solutions, but more importantly, it can handle arbitrarily complex regimes that the cause the alternative solutions to severely misestimate.
+Overall, the MMM and SKAN performed well in cases where the long run trend and seasonality were well addressed by a linear long run trend and Fourier-style seasonality, as well as stationary and symmetrical paid-organic latent states. These conditions can exist in a real DGP but are not *guaranteed* to exist. The benefit of MMX is it can handle these "easy" regimes well, comparable and sometimes even better than alternative solutions, but more importantly, it can handle arbitrarily complex regimes that the cause the alternative solutions to severely misestimate.
 
 ## Spend Decision Framework
 
