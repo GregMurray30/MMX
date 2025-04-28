@@ -1,3 +1,5 @@
+
+
 functions {
 
   real Hill(real t, real k, real slope) {
@@ -6,6 +8,7 @@ functions {
 
   }
 
+ 
 
   real Adstock(row_vector t, row_vector weights) {
 
@@ -13,6 +16,7 @@ functions {
 
   }
 
+ 
 
   real softplus(real x) {
 
@@ -23,6 +27,7 @@ functions {
 }
 
  
+
 data {
 
   int<lower=1> N_train;
@@ -136,6 +141,8 @@ data {
   real beta_curry_pckg_sd;
 
 
+
+
   // Prior means and standard deviations for scalars
 
   // Vectors for priors on channel-level noise parameters
@@ -144,6 +151,7 @@ data {
 
 // vector[num_media] channel_noise_prior_sd;
 
+ 
 
   real sigma_skan_mn;
 
@@ -166,6 +174,8 @@ data {
   vector[num_media] organic_halo_wt_sd;
 
 
+
+
   real sigma_mult_prior_mn;
 
   real sigma_mult_prior_sd;
@@ -175,6 +185,9 @@ data {
   real sigma_add_prior_sd;
 
  
+
+ 
+
   // ARMA state priors
 
   real sigma_state_shared_mn;
@@ -211,9 +224,20 @@ data {
 
   real theta_sd;
 
+ 
+
   real rho_paid_mn;
 
   real rho_paid_sd;
+
+
+
+
+
+  // Stage 2 parameters become data
+
+ 
+
 
 
 
@@ -244,24 +268,35 @@ data {
   real eta_trend_sd;
 
 
+
+
+
+
 }
 
  
+
 transformed data{
 
   int T= N_train+0;
 
+ 
+
 }
 
  
+
 parameters {
+
+ 
 
     real<lower=0> nu;
 
+ 
 
    // real shared_shock_scale; // scalar multiplier between 0 and 1
 
-
+ 
 
    real<lower=0> beta_holiday;
 
@@ -282,11 +317,14 @@ parameters {
   real<lower=0> beta_olympics;
 
  
+
   vector<lower=0>[num_media] beta_medias;
 
   vector<lower=1>[num_media] k;
 
   vector<lower=0.95, upper=4>[num_media] slope;
+
+
 
 
   real<lower=-.25, upper=.6> rho1;
@@ -297,14 +335,18 @@ parameters {
 
   real<lower=-.25, upper=.25> theta;
 
+ 
+
   real<lower=-.25, upper=.8> rho_paid;
 
+ 
 
   real<lower=0> sigma_add;
 
 // real<lower=0> sigma_mult;
 
  
+
   real mu0_trend;
 
   real beta0_trend;
@@ -318,6 +360,8 @@ parameters {
   vector[T] eta_trend;
 
 
+
+
   real<lower=0> sigma_skan;
 
   real<lower=0, upper=1> gamma_censor;
@@ -327,16 +371,19 @@ parameters {
   vector<lower=0>[num_media] organic_cannib_wt;
 
   vector<lower=0>[num_media] organic_halo_wt;
+
  
 
   //real<lower=0, upper=1> shared_shock_scale; // scalar multiplier between 0 and 1
 
   vector[T] shared_shock_raw; // raw shared shock (unit normal)
+
  
 
   real<lower=0> beta_google_trend;
 
  
+
   real<lower=0> sigma_state_shared;
 
   real<lower=0> sigma_state_dev_org;
@@ -345,15 +392,24 @@ parameters {
 
   vector[N_train] state_shared_raw;
 
-  vector<lower=0>[N_train] delta_paid_raw;
+  vector<lower=0>[N_train] delta_paid;
 
   vector<lower=0>[N_train] delta_org;
+
+
+
+
 
 
 }
 
  
+
 transformed parameters {
+
+ 
+
+ 
 
   // 1. Compute lag weights (as in V2)
 
@@ -377,13 +433,14 @@ transformed parameters {
 
  
 
-  vector[N_train] state_shared;
-
   vector[N_train] state_paid;
 
   vector[N_train] state_org;
 
 
+
+
+ 
 
   // For each training observation, compute the Hill-transformed media effect and censor bias:
 
@@ -401,6 +458,9 @@ transformed parameters {
 
   }
 
+ 
+
+ 
 
     // 3. Compute a Common Trend Component (shared by ORG and PAID)
 
@@ -435,79 +495,64 @@ transformed parameters {
   common_trend = level_trend;
 
  
-  vector[N_train] delta_paid;
 
-  real shift = log(exp(1)-1);
-
-  for(n in 1:N_train){
-
-    delta_paid[n] = softplus(delta_paid_raw[n] + shift);
-
-  }
+  vector[T] common_trend_nrm = common_trend - mean(common_trend) + 1;
 
  
 
-  // 4. Compute the ARMA (short-run) components for shared
-
-  // These use the state_raw_* innovations from your model.
-
-  vector[T] arma_shared;
+// 4. Compute the ARMA (short-run) components for shared
 
  
-
-  // Initialize the first 3 time points to 0 (or some fixed value)
-
-  for (t in 1:3) {
-
-    arma_shared[t] = 0;
-
-  }
-
-  for (t in 4:T) {
-
-    arma_shared[t] = rho1 * state_shared_raw[t-1] +
-
-                   rho2 * state_shared_raw[t-2] +
-
-                   rho3 * state_shared_raw[t-3] +
-
-                   theta * state_shared_raw[t-1];
-
-  }
-
-
-
-  // 5. Combine the common trend with the ARMA components for each partition
-
-  vector[T] state_shared_raw_combined;
-
-  for (t in 1:T) {
-
-    state_shared_raw_combined[t] = sigma_state_shared * arma_shared[t];
-
-  }
-
- 
-
-  // 6. Apply the softplus transformation to enforce positivity
 
   vector[T] state_shared_combined;
 
-  for (t in 1:T) {
+ 
 
-    state_shared_combined[t] = softplus(state_shared_raw_combined[t]);
+  // Initialize the first 3 time points centered at 1
+
+  state_shared_combined[1] = 1 + sigma_state_shared * state_shared_raw[1];
+
+  state_shared_combined[2] = 1 + rho1 * (state_shared_combined[1] - 1)
+
+                                + sigma_state_shared * state_shared_raw[2];
+
+  state_shared_combined[3] = 1 + rho1 * (state_shared_combined[2] - 1)
+
+                                + rho2 * (state_shared_combined[1] - 1)
+
+                                + sigma_state_shared * state_shared_raw[3];
+
+ 
+
+  // Recursion for t = 4 to T
+
+  for (t in 4:T) {
+
+    state_shared_combined[t] = 1
+
+      + rho1 * (state_shared_combined[t-1] - 1)
+
+      + rho2 * (state_shared_combined[t-2] - 1)
+
+      + rho3 * (state_shared_combined[t-3] - 1)
+
+      + theta * (state_shared_combined[t-1] - 1)
+
+      + sigma_state_shared * state_shared_raw[t];
 
   }
 
  
 
-  // 7. Partition the latent states into training and holdout sets:
+  // 5. Partition the latent states into training and holdout sets
 
   vector[N_train] state_train_shared = state_shared_combined[1:N_train];
 
  
 
-   for ( n in 1:N_train){
+  // 6. Partition into paid and organic states
+
+  for (n in 1:N_train) {
 
     state_paid[n] = state_train_shared[n] * delta_paid[n];
 
@@ -523,7 +568,7 @@ transformed parameters {
 
   for (n in 1:N_train) {
 
-    real season_trend = 1 +
+    real season_trend =
 
       common_trend[n] +
 
@@ -559,14 +604,23 @@ transformed parameters {
 
     }
 
+ 
+
   }
+
+ 
 
   real<lower=0> sigma_shared_max = sd(.2*(mu_train-Y_true_train));
 
+ 
+
   vector[T] shared_shock = shared_shock_raw * 0 * sigma_shared_max;
 
+ 
 
 }
+
+
 
 
 model {
@@ -643,7 +697,7 @@ model {
 
  
 
-  beta_google_trend ~ normal(0, .3);
+  beta_google_trend ~ normal(0, .5);
 
   sigma_state_shared ~ normal(sigma_state_shared_mn, sigma_state_shared_sd);
 
@@ -663,14 +717,17 @@ model {
 
   }
 
+ 
 
-  delta_paid_raw[1] ~ normal(0, sigma_state_dev_paid);
+  delta_paid[1] ~ normal(1, sigma_state_dev_paid);
 
   for (n in 2:N_train){
 
-    delta_paid_raw[n] ~ normal(rho_paid * delta_paid_raw[n-1], sigma_state_dev_paid);
+    delta_paid[n] ~ normal(1 + rho_paid * (delta_paid[n-1]-1), sigma_state_dev_paid);
 
   }
+
+
 
 
   rho1 ~ normal(rho1_mn, rho1_sd);
@@ -694,6 +751,8 @@ model {
   for (c in 1:num_media)
 
     cannibalization_effect[c] ~ normal(cannibalization_effect_mn[c] * cannibalization_role[c], cannibalization_effect_sd[c]);
+
+ 
 
  
 
@@ -773,7 +832,7 @@ generated quantities {
 
     // Compute the seasonal/event multiplier using the seasonal coefficients:
 
-    real season_trend = 1 + common_trend_train[n] +
+    real season_trend = common_trend_train[n] +
 
       beta_holiday * is_holiday_train[n] +
 
@@ -798,33 +857,51 @@ generated quantities {
    
 
     // Compute the channel sum for media inputs (using the Hill-adstock transformation):
+
     channel_sum_train[n] = dot_product(beta_medias, cum_effects_hill_train[n]);
 
    
+
     // Compute the organic component:
+
     organics_train[n] = state_org[n] * nu ;
 
+   
 
     // Compute overall revenue prediction using the latent state:
+
     Y_true_pred[n] = ( organics_train[n] + state_paid[n] * channel_sum_train[n] ) * season_trend;
 
    
+
+    
+
     // For attribution: SKAN predictions (using R_true_channel_train computed in the transformed block)
 
     for (c in 1:num_media) {
 
       real base_skan = R_true_channel_train[n, c] * (1 - censor_bias_train[n, c]);
+
       real cannib_term = 0;
+
       real halo_term = 0;
+
       for (j in 1:num_media) {
+
         if (j != c) {
+
           cannib_term += cannibalization_effect[c] * log1p(fmax(spend_train[n, j], 1e-2)) * log1p(fmax(spend_train[n, c], 1e-2));
+
         }
+
       }
 
+     
 
       cannib_term += organic_cannib_wt[c] * cannibalization_role[c] * log1p(fmax(spend_train[n, c], 1e-2))  * log1p(fmax(state_org[n], 1e-2));
+
       halo_term += -1 * organic_halo_wt[c] * halo_role[c] * log1p(fmax(spend_train[n, c], 1e-2));
+
       Y_skan_pred[n, c] = fmax(0, base_skan + cannib_term + halo_term + shared_shock[n] );
 
  
@@ -835,7 +912,19 @@ generated quantities {
 
     }
 
-  }  
+   
 
+    // Output the common trend component (for diagnostic purposes)
+
+   
+
+    // Optionally, compute Fourier seasonality if your model uses it:
+
+    // fourier_ssn_train[n] = beta_day_x * cos(2 * pi() * week_train[n] / prd)
+
+    // + beta_day_y * sin(2 * pi() * week_train[n] / prd);
+
+  }
+
+    
 }
-
