@@ -5,7 +5,7 @@
 
 We introduce MMX (Media Mix Modeling with Last-Touch Attribution Extensions), a fully Bayesian framework for marketing attribution that reconciles aggregate revenue signals with privacy-constrained fingerprinting data like SKAN. MMX captures latent monetization dynamics, long run drifts, seasonal effects, and channel-level biases, allowing for simultaneous inference of organic and paid revenue components. By accounting for structural halo, cannibalization, and poaching effects and aligning attribution with inferred monetization state, MMX improves interpretability and robustness in scenarios where traditional MMMs and last-touch methods fail. While the primary focus of this owrk is on SKAN, the attribution biases addressed - like poaching, halo, and cannibalization - are fundamental to last-touch attribtion more broadly. 
 
-Across 100 realistic simulations, MMX outperforms SKAN-derived response curves and causal attribution in the majority of cases, particularly for channels with decorrelated spend, meaningful spend magnitude, or pronounced attribution biases. While MMX can underperform when identifiability is fundamentally limited—such as under highly correlated or low-spend conditions—it offers a statistically better attribution strategy in most practical settings. 
+Across 50 realistic simulations, MMX outperforms SKAN-derived response curves and causal attribution in the majority of cases, particularly for channels with decorrelated spend, meaningful spend magnitude, or pronounced attribution biases. While MMX can underperform when identifiability is fundamentally limited—such as under highly correlated or low-spend conditions—it offers a statistically better attribution strategy in most practical settings. 
 
 We extend MMX into a Spend Decision Framework, which estimates the probability of profitability at each spend scale by sampling from the model's posterior. This enables channel-specific media planning based not on point estimates, but on the conditional likelihood of positive return for each model, MMX and SKAN, allowing the researcher to select the more favorable measurement system at each scale of spend for each channel.
 
@@ -277,8 +277,9 @@ We conduct 100 simulations across a spectrum of latent state correlations (15%�
 ## Results
 
 Simulation results show that the MMX framework improves attribution quality relative to baseline SKAN postbacks in the majority of realistic settings. Performance varies systematically by channel, reflecting differences in spend magnitude, cross-channel spend correlation, and effective paid–organic separation. Performance of MMX was benchmarked by two alternative solutions that are the main viable options for causility in a real world setting:
-1.) "Competent" MMM. Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), and organic baseline, with additive noise and a multiplicative DGP structure.
-2.) SKAN-fed, single-channel "MMM". Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), with additive noise and an additive DGP structure. Fits the Beta-Hill parameters, given controls, for one channel without needing to disambiguate since SKAN has channel-level revenue "observations".
+
+##### 1.) "Competent" MMM. Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), and organic baseline, with additive noise and a multiplicative DGP structure.
+##### 2.) SKAN-fed, single-channel "MMM". Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), with additive noise and an additive DGP structure. Fits the Beta-Hill parameters, given controls, for one channel without needing to disambiguate since SKAN has channel-level revenue "observations".
 
 #### Performance Metrics
 ##### ASA (High spend, low correlation with other channels):
@@ -290,6 +291,7 @@ Simulation results show that the MMX framework improves attribution quality rela
   - MMX 1.3
   - MMM 2.4
   - SKAN 2.1
+    
   Performance was robust across both high and low halo/cannibalization, channel effect, and latent states regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
 
 ##### FB (Moderate-high spend, moderate co-spend overlap):
@@ -301,6 +303,7 @@ Simulation results show that the MMX framework improves attribution quality rela
   - MMX 1.3
   - MMM 2.15
   - SKAN 2.55
+    
 Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
 
 ##### Tik Tok  (Low total spend, high co-spend with other channels):
@@ -312,6 +315,7 @@ Results were sensitive to latent state correlation and prior specification. In s
   - MMX 1.4
   - MMM 2.3
   - SKAN 2.3
+    
 Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
 
 Importantly, these results highlight that MMX is not universally superior: when channel spend is highly correlated or total spend is very small, MMX can overcorrect and underperform.
