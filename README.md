@@ -276,24 +276,46 @@ We conduct 100 simulations across a spectrum of latent state correlations (15%�
 
 ## Results
 
-Simulation results show that the MMX framework improves attribution quality relative to baseline SKAN postbacks in the majority of realistic settings. Performance varies systematically by channel, reflecting differences in spend magnitude, cross-channel spend correlation, and effective paid–organic separation.
+Simulation results show that the MMX framework improves attribution quality relative to baseline SKAN postbacks in the majority of realistic settings. Performance varies systematically by channel, reflecting differences in spend magnitude, cross-channel spend correlation, and effective paid–organic separation. Performance of MMX was benchmarked by two alternative solutions that are the main viable options for causility in a real world setting:
+1.) "Competent" MMM. Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), and organic baseline, with additive noise and a multiplicative DGP structure.
+2.) SKAN-fed, single-channel "MMM". Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), with additive noise and an additive DGP structure. Fits the Beta-Hill parameters, given controls, for one channel without needing to disambiguate since SKAN has channel-level revenue "observations".
 
 #### Performance Metrics
-ASA (High spend, low correlation with other channels):
+##### ASA (High spend, low correlation with other channels):
 - Avg MAPE:
-- - MMX 95
-- - MMM 596
-- - SKAN 146
- Performance was robust across both high and low halo/cannibalization regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
+  - MMX 95%
+  - MMM 196%
+  - SKAN 146%
+- Avg Rank:
+  - MMX 1.3
+  - MMM 2.4
+  - SKAN 2.1
+  Performance was robust across both high and low halo/cannibalization, channel effect, and latent states regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
 
-Channel B (Moderate spend, moderate co-spend overlap):
-MMX outperformed SKAN in 88% of simulations. Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
+##### FB (Moderate-high spend, moderate co-spend overlap):
+- Avg MAPE:
+  - MMX 35%
+  - MMM 64%
+  - SKAN 52%
+- Avg Rank:
+  - MMX 1.3
+  - MMM 2.15
+  - SKAN 2.55
+Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
 
-Channel C (Low total spend, high co-spend with other channels):
-MMX outperformed SKAN in 54% of simulations. Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
+##### Tik Tok  (Low total spend, high co-spend with other channels):
+- Avg MAPE:
+  - MMX 57%
+  - MMM 240%
+  - SKAN 83%
+- Avg Rank:
+  - MMX 1.4
+  - MMM 2.3
+  - SKAN 2.3
+Performance improved when cannibalization priors were loosened and the channel had short periods of isolated spend, suggesting identifiability remains contingent on data structure.
 
 Importantly, these results highlight that MMX is not universally superior: when channel spend is highly correlated or total spend is very small, MMX can overcorrect and underperform.
-However, across platforms where identifiable variation exists, MMX offers a statistically better attribution correction in the majority of cases.
+However, across platforms where identifiable variation exists, MMX offers a stable and statistically robust attribution in the majority of cases as evidenced by the performance relative to alternative solutions (a standard MMM, SKAN-fed, single channel MMM for causality).
 
 Furthermore, by integrating MMX outputs into a Spend Decision Framework, practitioners can dynamically choose between attribution models at different spend scales per channel, maximizing profitability without relying on a one-size-fits-all correction.
 
