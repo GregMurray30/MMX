@@ -282,7 +282,7 @@ Simulation results show that the MMX framework improves attribution quality rela
 ##### 2.) SKAN-fed, single-channel "MMM". Controls for long run trend, binary events, seasonality (3 harmonic Fourier transform), with additive noise and an additive DGP structure. Fits the Beta-Hill parameters, given controls, for one channel without needing to disambiguate since SKAN has channel-level revenue "observations".
 
 #### Performance Metrics
-##### ASA (High spend, low correlation with other channels):
+##### Channel A (High spend, low correlation with other channels):
 - Avg MAPE:
   - MMX 95%
   - MMM 196%
@@ -294,7 +294,7 @@ Simulation results show that the MMX framework improves attribution quality rela
     
   Performance was robust across both high and low halo/cannibalization, channel effect, and latent states regimes. This channel’s low collinearity and high scale facilitated identifiability of its causal impact.
 
-##### FB (Moderate-high spend, moderate co-spend overlap):
+##### Channel B (Moderate-high spend, moderate co-spend overlap):
 - Avg MAPE:
   - MMX 35%
   - MMM 64%
@@ -306,7 +306,7 @@ Simulation results show that the MMX framework improves attribution quality rela
     
 Results were sensitive to latent state correlation and prior specification. In simulations where SKAN biases were large (e.g., halo magnitude > 1.0), MMX provided significant directional improvement. In low-bias or tightly coupled simulations, MMX occasionally diverged incorrectly.
 
-##### Tik Tok  (Low total spend, high co-spend with other channels):
+##### Channel C (Low total spend, high co-spend with other channels):
 - Avg MAPE:
   - MMX 57%
   - MMM 240%
